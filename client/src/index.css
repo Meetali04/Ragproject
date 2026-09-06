@@ -1,0 +1,5 @@
+:root { font-family: 'Avenir Next', 'Helvetica Neue', sans-serif; color: #17352d; background: #fffaf0; font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; }
+button, select { cursor: pointer; }
