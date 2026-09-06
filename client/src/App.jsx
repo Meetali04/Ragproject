@@ -8,17 +8,15 @@ import {
   CardMedia,
   Container,
   CssBaseline,
-  FormControl,
-  InputLabel,
+  Divider,
   Link,
-  MenuItem,
-  Select,
   Stack,
   ThemeProvider,
   Toolbar,
   Typography,
   createTheme,
 } from '@mui/material'
+import { DestinationDetails, ExplorePage } from './Explore'
 
 const theme = createTheme({
   palette: {
@@ -38,81 +36,69 @@ const theme = createTheme({
 
 function App() {
   const [destinations, setDestinations] = useState([])
-  const [destination, setDestination] = useState('')
-  const [travelers, setTravelers] = useState('2 travelers')
-  const [status, setStatus] = useState('')
 
   useEffect(() => {
     fetch('/api/destinations')
       .then((response) => response.json())
       .then(setDestinations)
-      .catch(() => setStatus('Destinations are temporarily unavailable.'))
+      .catch(() => setDestinations([]))
   }, [])
 
-  async function handleSearch(event) {
-    event.preventDefault()
-    if (!destination) {
-      setStatus('Choose a destination to start exploring.')
-      return
-    }
-    const response = await fetch('/api/bookings', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ destination, travelers }),
-    })
-    const result = await response.json()
-    setStatus(result.message)
+  const path = window.location.pathname
+  if (path === '/explore') return <ThemeProvider theme={theme}><CssBaseline /><ExplorePage /></ThemeProvider>
+  if (path.startsWith('/explore/')) {
+    const destination = destinations.find((place) => String(place.id) === path.split('/')[2])
+    return <ThemeProvider theme={theme}><CssBaseline /><DestinationDetails destination={destination} /></ThemeProvider>
   }
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box component="main">
-        <Box component="section" sx={{ minHeight: 760, color: '#fffaf0', background: 'linear-gradient(90deg, rgba(12, 29, 25, .82), rgba(12, 29, 25, .12)), url(https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=2000&q=85) center/cover' }}>
-          <AppBar position="static" color="transparent" elevation={0} sx={{ pt: 1 }}>
-            <Toolbar sx={{ width: 'min(1120px, calc(100% - 3rem))', mx: 'auto', px: '0 !important', justifyContent: 'space-between' }}>
-              <Link href="/" color="inherit" underline="none" sx={{ font: '700 1.7rem/1 Georgia, serif', letterSpacing: '-.06em' }}>roam<span style={{ color: '#e9825d' }}>.</span></Link>
-              <Stack direction="row" spacing={4} sx={{ ml: 'auto', mr: 4, display: { xs: 'none', sm: 'flex' } }}>
-                <Link href="#destinations" color="inherit" underline="none">Destinations</Link>
-                <Link href="#about" color="inherit" underline="none">Our story</Link>
-              </Stack>
-              <Button variant="outlined" color="inherit" sx={{ borderRadius: 99 }}>Sign in</Button>
-            </Toolbar>
-          </AppBar>
-          <Container sx={{ pt: { xs: 12, md: 20 }, pb: 8 }}>
-            <Typography variant="overline" sx={{ color: 'secondary.main', letterSpacing: '.13em' }}>Travel slowly. See deeply.</Typography>
-            <Typography variant="h1" sx={{ maxWidth: 700, fontSize: { xs: '4.2rem', md: '8.5rem' }, lineHeight: .82, letterSpacing: '-.065em', my: 2 }}>Go somewhere<br /><Box component="em" sx={{ color: 'secondary.main' }}>beautiful.</Box></Typography>
-            <Typography sx={{ maxWidth: 390, color: '#e5e2d9', fontSize: '1.08rem' }}>Thoughtful trips to the places that stay with you long after you return home.</Typography>
-            <Box component="form" onSubmit={handleSearch} sx={{ display: 'flex', alignItems: 'stretch', flexDirection: { xs: 'column', sm: 'row' }, width: 'min(100%, 730px)', mt: 7, p: .75, color: 'primary.main', bgcolor: '#fffaf0' }}>
-              <FormControl fullWidth sx={{ borderRight: { sm: '1px solid #d8d8cc' } }}>
-                <InputLabel>Where to?</InputLabel>
-                <Select value={destination} label="Where to?" onChange={(event) => setDestination(event.target.value)}>
-                  <MenuItem value="">Choose a destination</MenuItem>
-                  {destinations.map((place) => <MenuItem key={place.id} value={place.name}>{place.name}</MenuItem>)}
-                </Select>
-              </FormControl>
-              <FormControl fullWidth>
-                <InputLabel>Who is coming?</InputLabel>
-                <Select value={travelers} label="Who is coming?" onChange={(event) => setTravelers(event.target.value)}>
-                  <MenuItem value="1 traveler">1 traveler</MenuItem><MenuItem value="2 travelers">2 travelers</MenuItem><MenuItem value="3 travelers">3 travelers</MenuItem><MenuItem value="4+ travelers">4+ travelers</MenuItem>
-                </Select>
-              </FormControl>
-              <Button type="submit" variant="contained" color="secondary" sx={{ minWidth: 170, color: '#fffaf0' }}>Find a trip ↗</Button>
-            </Box>
-            {status && <Typography role="status" sx={{ mt: 1, fontSize: '.85rem' }}>{status}</Typography>}
+        <AppBar position="absolute" color="transparent" elevation={0} sx={{ top: 0, pt: 1, zIndex: 2 }}>
+          <Toolbar sx={{ width: 'min(1120px, calc(100% - 3rem))', mx: 'auto', px: '0 !important', justifyContent: 'space-between' }}>
+            <Link href="/" color="inherit" underline="none" sx={{ font: '700 1.7rem/1 Georgia, serif', letterSpacing: '-.06em' }}>roam<span style={{ color: '#e9825d' }}>.</span></Link>
+            <Stack direction="row" spacing={{ xs: 2, md: 4 }} sx={{ ml: 'auto', mr: { xs: 2, md: 4 }, display: { xs: 'none', sm: 'flex' } }}>
+              <Link href="/explore" color="inherit" underline="none">Explore</Link>
+              <Link href="#ai-planner" color="inherit" underline="none">AI Planner</Link>
+              <Link href="#trips" color="inherit" underline="none">My Trips</Link>
+            </Stack>
+            <Button variant="outlined" color="inherit" sx={{ borderRadius: 99 }}>Sign in</Button>
+          </Toolbar>
+        </AppBar>
+        <Box component="section" sx={{ minHeight: 760, color: '#fffaf0', background: 'linear-gradient(90deg, rgba(12, 29, 25, .86), rgba(12, 29, 25, .2)), url(https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=2000&q=85) center/cover' }}>
+          <Container sx={{ pt: { xs: 18, md: 23 }, pb: 10 }}>
+            <Typography variant="overline" sx={{ color: 'secondary.main', letterSpacing: '.13em' }}>Your smarter way to wander</Typography>
+            <Typography variant="h1" sx={{ maxWidth: 850, fontSize: { xs: '4rem', md: '7.5rem' }, lineHeight: .87, letterSpacing: '-.06em', my: 2 }}>Plan your next<br /><Box component="em" sx={{ color: 'secondary.main' }}>adventure with AI.</Box></Typography>
+            <Typography sx={{ maxWidth: 460, color: '#e5e2d9', fontSize: '1.12rem', lineHeight: 1.5 }}>Create personalized itineraries using intelligent recommendations built around the way you want to travel.</Typography>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 5 }}>
+              <Button href="#ai-planner" variant="contained" color="secondary" sx={{ color: '#fffaf0', px: 3, py: 1.5 }}>Try AI planner ↗</Button>
+              <Button href="/explore" variant="outlined" color="inherit" sx={{ px: 3, py: 1.5 }}>Explore destinations</Button>
+            </Stack>
           </Container>
         </Box>
         <Container component="section" id="destinations" sx={{ py: { xs: 8, md: 14 } }}>
           <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ sm: 'end' }} spacing={3} mb={4}>
-            <Box><Typography variant="overline" color="secondary.main" sx={{ letterSpacing: '.13em' }}>Handpicked for you</Typography><Typography variant="h2" sx={{ fontSize: { xs: '2.6rem', md: '5rem' }, lineHeight: .95 }}>Places with a pulse.</Typography></Box>
+            <Box><Typography variant="overline" color="secondary.main" sx={{ letterSpacing: '.13em' }}>Popular destinations</Typography><Typography variant="h2" sx={{ fontSize: { xs: '2.6rem', md: '5rem' }, lineHeight: .95 }}>Places with a pulse.</Typography></Box>
             <Link href="#destinations" color="primary.main" underline="none" sx={{ borderBottom: '1px solid', borderColor: 'secondary.main', pb: .5 }}>View all destinations ↗</Link>
           </Stack>
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2 }}>
             {destinations.map((place) => <Card key={place.id} sx={{ minHeight: 430, position: 'relative', color: '#fffaf0', bgcolor: 'primary.main' }}><CardMedia component="img" image={place.image} alt={place.name} sx={{ height: 430, objectFit: 'cover' }} /><CardContent sx={{ position: 'absolute', inset: 'auto 0 0', pt: 10, background: 'linear-gradient(transparent, rgba(12,29,25,.9))' }}><Typography variant="overline" sx={{ color: '#f1bb76', letterSpacing: '.1em' }}>{place.region}</Typography><Typography variant="h3" sx={{ fontSize: '2rem' }}>{place.name}</Typography><Typography variant="body2" sx={{ color: '#e5e2d9' }}>{place.description}</Typography></CardContent></Card>)}
           </Box>
         </Container>
-        <Box component="section" id="about" sx={{ py: { xs: 8, md: 14 }, bgcolor: 'background.paper' }}><Container><Typography variant="overline" color="secondary.main" sx={{ letterSpacing: '.13em' }}>Why roam?</Typography><Typography variant="h2" sx={{ maxWidth: 760, fontSize: { xs: '2.6rem', md: '5rem' }, lineHeight: .95, mt: 1 }}>The world is wide.<br />Your trip should feel <Box component="em" sx={{ color: 'secondary.main' }}>personal.</Box></Typography><Typography sx={{ maxWidth: 400, color: 'text.secondary', lineHeight: 1.6, mt: 3 }}>We pair curious people with local experts and small places that make a destination feel like yours.</Typography></Container></Box>
-        <Container component="footer" sx={{ display: 'flex', justifyContent: 'space-between', py: 3, color: 'text.secondary' }}><Link href="/" color="primary.main" underline="none" sx={{ font: '700 1.7rem/1 Georgia, serif' }}>roam<span style={{ color: '#e9825d' }}>.</span></Link><Typography variant="caption">Made for the curious · 2025</Typography></Container>
+        <Box component="section" id="ai-planner" sx={{ py: { xs: 8, md: 14 }, bgcolor: 'background.paper' }}>
+          <Container>
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 5, md: 10 }} alignItems="center">
+              <Box sx={{ flex: 1 }}><Typography variant="overline" color="secondary.main" sx={{ letterSpacing: '.13em' }}>Meet your travel co-pilot</Typography><Typography variant="h2" sx={{ maxWidth: 620, fontSize: { xs: '2.6rem', md: '5rem' }, lineHeight: .95, mt: 1 }}>A better trip starts with a <Box component="em" sx={{ color: 'secondary.main' }}>conversation.</Box></Typography><Typography sx={{ maxWidth: 430, color: 'text.secondary', lineHeight: 1.6, mt: 3 }}>Tell our AI what you love, and get a thoughtful route with places to stay, eat, and explore.</Typography><Button variant="contained" color="primary" sx={{ mt: 4, px: 3, py: 1.5 }}>Try AI planner ↗</Button></Box>
+              <Card sx={{ flex: 1, width: '100%', maxWidth: 520, p: { xs: 2, md: 3 }, bgcolor: '#fffaf0', border: '1px solid #d8d8cc', boxShadow: '0 18px 45px rgba(23,53,45,.12)' }}>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}><Typography fontWeight={700}>roam AI</Typography><Typography variant="caption" color="text.secondary">Online now</Typography></Stack><Divider />
+                <Stack spacing={2.2} sx={{ py: 3 }}><Box sx={{ alignSelf: 'flex-end', maxWidth: '82%', p: 1.5, bgcolor: 'primary.main', color: '#fffaf0' }}><Typography variant="body2">I want a relaxed 5-day trip with food, art, and coastal views.</Typography></Box><Box sx={{ maxWidth: '88%', p: 1.5, bgcolor: '#e7e1d1' }}><Typography variant="body2">I have a few ideas. How about Lisbon? I can balance slow mornings in Alfama with galleries, seafood, and a day along the coast.</Typography></Box><Box sx={{ alignSelf: 'flex-end', maxWidth: '82%', p: 1.5, bgcolor: 'primary.main', color: '#fffaf0' }}><Typography variant="body2">That sounds perfect. Build the itinerary.</Typography></Box></Stack><Button fullWidth variant="outlined" color="secondary">Start planning your trip</Button>
+              </Card>
+            </Stack>
+          </Container>
+        </Box>
+        <Box component="section" id="trips" sx={{ py: { xs: 8, md: 12 } }}><Container><Typography variant="overline" color="secondary.main" sx={{ letterSpacing: '.13em' }}>Why roam?</Typography><Typography variant="h2" sx={{ maxWidth: 760, fontSize: { xs: '2.6rem', md: '5rem' }, lineHeight: .95, mt: 1 }}>The world is wide.<br />Your trip should feel <Box component="em" sx={{ color: 'secondary.main' }}>personal.</Box></Typography><Typography sx={{ maxWidth: 400, color: 'text.secondary', lineHeight: 1.6, mt: 3 }}>We pair curious people with local experts and small places that make a destination feel like yours.</Typography></Container></Box>
+        <Box component="footer" sx={{ bgcolor: 'primary.main', color: '#fffaf0', py: 5 }}><Container><Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" spacing={3}><Link href="/" color="inherit" underline="none" sx={{ font: '700 1.7rem/1 Georgia, serif' }}>roam<span style={{ color: '#e9825d' }}>.</span></Link><Stack direction="row" spacing={3}><Link href="#destinations" color="inherit" underline="none">Explore</Link><Link href="#ai-planner" color="inherit" underline="none">AI Planner</Link><Link href="#trips" color="inherit" underline="none">My Trips</Link></Stack><Typography variant="caption" sx={{ color: '#c7d1c7' }}>Made for the curious · 2025</Typography></Stack></Container></Box>
       </Box>
     </ThemeProvider>
   )
