@@ -17,6 +17,7 @@ import {
   createTheme,
 } from '@mui/material'
 import { DestinationDetails, ExplorePage } from './Explore'
+import { TripDetailsRoute, TripsPage } from './Trips'
 
 const theme = createTheme({
   palette: {
@@ -46,6 +47,10 @@ function App() {
 
   const path = window.location.pathname
   if (path === '/explore') return <ThemeProvider theme={theme}><CssBaseline /><ExplorePage /></ThemeProvider>
+  if (path === '/trips') return <ThemeProvider theme={theme}><CssBaseline /><TripsPage /></ThemeProvider>
+  if (path.startsWith('/trips/')) {
+    return <ThemeProvider theme={theme}><CssBaseline /><TripDetailsRoute tripId={path.split('/')[2]} /></ThemeProvider>
+  }
   if (path.startsWith('/explore/')) {
     const destination = destinations.find((place) => String(place.id) === path.split('/')[2])
     return <ThemeProvider theme={theme}><CssBaseline /><DestinationDetails destination={destination} /></ThemeProvider>
@@ -61,7 +66,7 @@ function App() {
             <Stack direction="row" spacing={{ xs: 2, md: 4 }} sx={{ ml: 'auto', mr: { xs: 2, md: 4 }, display: { xs: 'none', sm: 'flex' } }}>
               <Link href="/explore" color="inherit" underline="none">Explore</Link>
               <Link href="#ai-planner" color="inherit" underline="none">AI Planner</Link>
-              <Link href="#trips" color="inherit" underline="none">My Trips</Link>
+              <Link href="/trips" color="inherit" underline="none">My Trips</Link>
             </Stack>
             <Button variant="outlined" color="inherit" sx={{ borderRadius: 99 }}>Sign in</Button>
           </Toolbar>
@@ -98,7 +103,7 @@ function App() {
           </Container>
         </Box>
         <Box component="section" id="trips" sx={{ py: { xs: 8, md: 12 } }}><Container><Typography variant="overline" color="secondary.main" sx={{ letterSpacing: '.13em' }}>Why roam?</Typography><Typography variant="h2" sx={{ maxWidth: 760, fontSize: { xs: '2.6rem', md: '5rem' }, lineHeight: .95, mt: 1 }}>The world is wide.<br />Your trip should feel <Box component="em" sx={{ color: 'secondary.main' }}>personal.</Box></Typography><Typography sx={{ maxWidth: 400, color: 'text.secondary', lineHeight: 1.6, mt: 3 }}>We pair curious people with local experts and small places that make a destination feel like yours.</Typography></Container></Box>
-        <Box component="footer" sx={{ bgcolor: 'primary.main', color: '#fffaf0', py: 5 }}><Container><Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" spacing={3}><Link href="/" color="inherit" underline="none" sx={{ font: '700 1.7rem/1 Georgia, serif' }}>roam<span style={{ color: '#e9825d' }}>.</span></Link><Stack direction="row" spacing={3}><Link href="#destinations" color="inherit" underline="none">Explore</Link><Link href="#ai-planner" color="inherit" underline="none">AI Planner</Link><Link href="#trips" color="inherit" underline="none">My Trips</Link></Stack><Typography variant="caption" sx={{ color: '#c7d1c7' }}>Made for the curious · 2025</Typography></Stack></Container></Box>
+        <Box component="footer" sx={{ bgcolor: 'primary.main', color: '#fffaf0', py: 5 }}><Container><Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" spacing={3}><Link href="/" color="inherit" underline="none" sx={{ font: '700 1.7rem/1 Georgia, serif' }}>roam<span style={{ color: '#e9825d' }}>.</span></Link><Stack direction="row" spacing={3}><Link href="/explore" color="inherit" underline="none">Explore</Link><Link href="#ai-planner" color="inherit" underline="none">AI Planner</Link><Link href="/trips" color="inherit" underline="none">My Trips</Link></Stack><Typography variant="caption" sx={{ color: '#c7d1c7' }}>Made for the curious · 2025</Typography></Stack></Container></Box>
       </Box>
     </ThemeProvider>
   )

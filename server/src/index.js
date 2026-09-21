@@ -11,12 +11,57 @@ const destinations = [
   { id: 3, name: 'Marrakech', region: 'North Africa', country: 'Morocco', budget: 'Budget', duration: 4, type: 'Culture', description: 'Rose-colored walls and markets full of stories.', image: 'https://images.unsplash.com/photo-1548013146-72479768badaa?auto=format&fit=crop&w=900&q=80' },
 ]
 
+const trips = [
+  {
+    id: 1,
+    country: 'Japan',
+    destination: 'Kyoto',
+    days: 5,
+    dates: '12 - 17 October 2026',
+    status: 'Upcoming',
+    description: 'A slow, thoughtful week of gardens, tea houses, and lantern-lit evenings.',
+    image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=80',
+    itinerary: [
+      { day: 1, title: 'Arrival in Kyoto', plan: 'Settle into Gion and take an evening walk through the old streets.' },
+      { day: 2, title: 'Temples and tea', plan: 'Visit Kiyomizu-dera, explore Higashiyama, and join a tea ceremony.' },
+      { day: 3, title: 'Arashiyama', plan: 'Walk through the bamboo grove, visit the river, and enjoy a quiet garden lunch.' },
+      { day: 4, title: 'Markets and makers', plan: 'Taste your way through Nishiki Market and meet local craftspeople.' },
+      { day: 5, title: 'A gentle goodbye', plan: 'Enjoy a final morning in a garden cafe before departing.' },
+    ],
+  },
+  {
+    id: 2,
+    country: 'Italy',
+    destination: 'Amalfi Coast',
+    days: 7,
+    dates: '4 - 11 June 2027',
+    status: 'Planning',
+    description: 'Cliffside villages, lemon-scented mornings, and blue water all the way to Capri.',
+    image: 'https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?auto=format&fit=crop&w=1200&q=80',
+    itinerary: [
+      { day: 1, title: 'Arrive in Positano', plan: 'Check in, settle by the sea, and watch the sunset from the terrace.' },
+      { day: 2, title: 'Path of the Gods', plan: 'Hike the coastal trail with a local guide and picnic above the cliffs.' },
+      { day: 3, title: 'Ravello gardens', plan: 'Explore Villa Cimbrone and enjoy a long lunch in the hills.' },
+    ],
+  },
+]
+
 app.get('/api/health', (_request, response) => {
   response.json({ status: 'ok', message: 'Connected to Node.js' })
 })
 
 app.get('/api/destinations', (_request, response) => {
   response.json(destinations)
+})
+
+app.get('/api/trips', (_request, response) => {
+  response.json(trips)
+})
+
+app.get('/api/trips/:id', (request, response) => {
+  const trip = trips.find((item) => String(item.id) === request.params.id)
+  if (!trip) return response.status(404).json({ message: 'Trip not found.' })
+  response.json(trip)
 })
 
 app.get('/api/explore/options', (_request, response) => {

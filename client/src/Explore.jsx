@@ -76,7 +76,7 @@ export function ExplorePage() {
       <AppBar position="static" color="primary" elevation={0}>
         <Toolbar sx={{ width: 'min(1120px, calc(100% - 3rem))', mx: 'auto', px: '0 !important', justifyContent: 'space-between' }}>
           <Link href="/" color="inherit" underline="none" sx={{ font: '700 1.7rem/1 Georgia, serif', letterSpacing: '-.06em' }}>roam<span style={{ color: '#e9825d' }}>.</span></Link>
-          <Stack direction="row" spacing={{ xs: 2, md: 4 }} sx={{ display: { xs: 'none', sm: 'flex' } }}><Link href="/explore" color="inherit" underline="none">Explore</Link><Link href="/#ai-planner" color="inherit" underline="none">AI Planner</Link><Link href="/#trips" color="inherit" underline="none">My Trips</Link></Stack>
+          <Stack direction="row" spacing={{ xs: 2, md: 4 }} sx={{ display: { xs: 'none', sm: 'flex' } }}><Link href="/explore" color="inherit" underline="none">Explore</Link><Link href="/#ai-planner" color="inherit" underline="none">AI Planner</Link><Link href="/trips" color="inherit" underline="none">My Trips</Link></Stack>
           <Button variant="outlined" color="inherit" sx={{ borderRadius: 99 }}>Sign in</Button>
         </Toolbar>
       </AppBar>
