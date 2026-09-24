@@ -18,6 +18,7 @@ import {
 } from '@mui/material'
 import { DestinationDetails, ExplorePage } from './Explore'
 import { TripDetailsRoute, TripsPage } from './Trips'
+import { AIPlannerPage } from './AIPlanner'
 
 const theme = createTheme({
   palette: {
@@ -48,6 +49,7 @@ function App() {
   const path = window.location.pathname
   if (path === '/explore') return <ThemeProvider theme={theme}><CssBaseline /><ExplorePage /></ThemeProvider>
   if (path === '/trips') return <ThemeProvider theme={theme}><CssBaseline /><TripsPage /></ThemeProvider>
+  if (path === '/ai-planner') return <ThemeProvider theme={theme}><CssBaseline /><AIPlannerPage /></ThemeProvider>
   if (path.startsWith('/trips/')) {
     return <ThemeProvider theme={theme}><CssBaseline /><TripDetailsRoute tripId={path.split('/')[2]} /></ThemeProvider>
   }
@@ -65,7 +67,7 @@ function App() {
             <Link href="/" color="inherit" underline="none" sx={{ font: '700 1.7rem/1 Georgia, serif', letterSpacing: '-.06em' }}>roam<span style={{ color: '#e9825d' }}>.</span></Link>
             <Stack direction="row" spacing={{ xs: 2, md: 4 }} sx={{ ml: 'auto', mr: { xs: 2, md: 4 }, display: { xs: 'none', sm: 'flex' } }}>
               <Link href="/explore" color="inherit" underline="none">Explore</Link>
-              <Link href="#ai-planner" color="inherit" underline="none">AI Planner</Link>
+              <Link href="/ai-planner" color="inherit" underline="none">AI Planner</Link>
               <Link href="/trips" color="inherit" underline="none">My Trips</Link>
             </Stack>
             <Button variant="outlined" color="inherit" sx={{ borderRadius: 99 }}>Sign in</Button>
@@ -77,7 +79,7 @@ function App() {
             <Typography variant="h1" sx={{ maxWidth: 850, fontSize: { xs: '4rem', md: '7.5rem' }, lineHeight: .87, letterSpacing: '-.06em', my: 2 }}>Plan your next<br /><Box component="em" sx={{ color: 'secondary.main' }}>adventure with AI.</Box></Typography>
             <Typography sx={{ maxWidth: 460, color: '#e5e2d9', fontSize: '1.12rem', lineHeight: 1.5 }}>Create personalized itineraries using intelligent recommendations built around the way you want to travel.</Typography>
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 5 }}>
-              <Button href="#ai-planner" variant="contained" color="secondary" sx={{ color: '#fffaf0', px: 3, py: 1.5 }}>Try AI planner ↗</Button>
+              <Button href="/ai-planner" variant="contained" color="secondary" sx={{ color: '#fffaf0', px: 3, py: 1.5 }}>Try AI planner ↗</Button>
               <Button href="/explore" variant="outlined" color="inherit" sx={{ px: 3, py: 1.5 }}>Explore destinations</Button>
             </Stack>
           </Container>
@@ -94,7 +96,7 @@ function App() {
         <Box component="section" id="ai-planner" sx={{ py: { xs: 8, md: 14 }, bgcolor: 'background.paper' }}>
           <Container>
             <Stack direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 5, md: 10 }} alignItems="center">
-              <Box sx={{ flex: 1 }}><Typography variant="overline" color="secondary.main" sx={{ letterSpacing: '.13em' }}>Meet your travel co-pilot</Typography><Typography variant="h2" sx={{ maxWidth: 620, fontSize: { xs: '2.6rem', md: '5rem' }, lineHeight: .95, mt: 1 }}>A better trip starts with a <Box component="em" sx={{ color: 'secondary.main' }}>conversation.</Box></Typography><Typography sx={{ maxWidth: 430, color: 'text.secondary', lineHeight: 1.6, mt: 3 }}>Tell our AI what you love, and get a thoughtful route with places to stay, eat, and explore.</Typography><Button variant="contained" color="primary" sx={{ mt: 4, px: 3, py: 1.5 }}>Try AI planner ↗</Button></Box>
+              <Box sx={{ flex: 1 }}><Typography variant="overline" color="secondary.main" sx={{ letterSpacing: '.13em' }}>Meet your travel co-pilot</Typography><Typography variant="h2" sx={{ maxWidth: 620, fontSize: { xs: '2.6rem', md: '5rem' }, lineHeight: .95, mt: 1 }}>A better trip starts with a <Box component="em" sx={{ color: 'secondary.main' }}>conversation.</Box></Typography><Typography sx={{ maxWidth: 430, color: 'text.secondary', lineHeight: 1.6, mt: 3 }}>Tell our AI what you love, and get a thoughtful route with places to stay, eat, and explore.</Typography><Button href="/ai-planner" variant="contained" color="primary" sx={{ mt: 4, px: 3, py: 1.5 }}>Try AI planner ↗</Button></Box>
               <Card sx={{ flex: 1, width: '100%', maxWidth: 520, p: { xs: 2, md: 3 }, bgcolor: '#fffaf0', border: '1px solid #d8d8cc', boxShadow: '0 18px 45px rgba(23,53,45,.12)' }}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}><Typography fontWeight={700}>roam AI</Typography><Typography variant="caption" color="text.secondary">Online now</Typography></Stack><Divider />
                 <Stack spacing={2.2} sx={{ py: 3 }}><Box sx={{ alignSelf: 'flex-end', maxWidth: '82%', p: 1.5, bgcolor: 'primary.main', color: '#fffaf0' }}><Typography variant="body2">I want a relaxed 5-day trip with food, art, and coastal views.</Typography></Box><Box sx={{ maxWidth: '88%', p: 1.5, bgcolor: '#e7e1d1' }}><Typography variant="body2">I have a few ideas. How about Lisbon? I can balance slow mornings in Alfama with galleries, seafood, and a day along the coast.</Typography></Box><Box sx={{ alignSelf: 'flex-end', maxWidth: '82%', p: 1.5, bgcolor: 'primary.main', color: '#fffaf0' }}><Typography variant="body2">That sounds perfect. Build the itinerary.</Typography></Box></Stack><Button fullWidth variant="outlined" color="secondary">Start planning your trip</Button>

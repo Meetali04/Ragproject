@@ -50,6 +50,17 @@ app.get('/api/health', (_request, response) => {
   response.json({ status: 'ok', message: 'Connected to Node.js' })
 })
 
+app.post('/api/ai-planner/chat', (request, response) => {
+  const { answer = '', messageCount = 1 } = request.body
+  const questions = [
+    'When would you like to travel, and how many days do you have?',
+    'What kind of pace and experiences do you prefer: relaxed, adventurous, cultural, or a mix?',
+    'Perfect. I have enough to start shaping your personalized itinerary.',
+  ]
+  const questionIndex = Math.min(Math.max(messageCount - 1, 0), questions.length - 1)
+  response.json({ message: answer.trim() ? questions[questionIndex] : 'Tell me a little more about your trip.' })
+})
+
 app.get('/api/destinations', (_request, response) => {
   response.json(destinations)
 })
