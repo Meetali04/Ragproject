@@ -1,10 +1,17 @@
+import 'dotenv/config'
 import express from 'express'
+import { createClient } from '@supabase/supabase-js'
 
 const app = express()
 const port = process.env.PORT || 3001
 
 app.use(express.json())
-
+const supabaseUrl = process.env.SUPABASE_URL
+const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY
+if (!supabaseUrl || !supabaseSecretKey) {
+  throw new Error('SUPABASE_URL and SUPABASE_SECRET_KEY must be set in the environment variables.');
+}
+const supabase = createClient(supabaseUrl, supabaseSecretKey)
 const destinations = [
   { id: 1, name: 'Amalfi Coast', region: 'Mediterranean', country: 'Italy', budget: 'Premium', duration: 7, type: 'Coastal', description: 'Cliffside villages and lemon-scented mornings.', image: 'https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?auto=format&fit=crop&w=900&q=80' },
   { id: 2, name: 'Kyoto', region: 'East Asia', country: 'Japan', budget: 'Mid-range', duration: 5, type: 'Culture', description: 'Quiet gardens, warm lantern light, and old tea houses.', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=900&q=80' },
@@ -46,7 +53,15 @@ const trips = [
   },
 ]
 
-app.get('/api/health', (_request, response) => {
+app.get('/api/health', async (_request, response) => {
+  const {error} = await supabase
+        .from('documents')
+        .select('id')
+        .limit(1)
+  if(error) {
+    console.error('Error occurred while checking health:', error);
+    return response.status(500).json({ status: 'error', message: error.message });
+  }
   response.json({ status: 'ok', message: 'Connected to Node.js' })
 })
 
