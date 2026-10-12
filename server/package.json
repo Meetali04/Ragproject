@@ -5,11 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch src/index.js",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "ingest": "node src/ingest.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",
     "dotenv": "^18.0.4",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "openai": "^7.27.0"
   }
 }
